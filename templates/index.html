@@ -2,10 +2,21 @@
 
 {% block content %}
     <h1>Задачи:</h1>
-    <h2>...</h2>
-    {% for item in jobs %}
-        <div class="col-md6 border rounded">
-
-        </div>
-    {% endfor %}
+    {% if current_user.is_authenticated %}
+        {% for item in jobs %}
+            <div class="col-md6 border rounded">
+                <h4>Описание:</h4> <h5>{{item.job}}</h5>
+                <h4>Объём работы (часы):</h4> <h5>{{item.work_size}}</h5>
+                <h4>Начало работы:</h4> <h5>{{item.start_date}}</h5>
+                <h4>Закончена?</h4>
+                {% if item.is_finished == 1 %}
+                    <h5>Да</h5>
+                {% else %}
+                    <h5>Нет</h5>
+                {% endif %}
+            </div> <br>
+        {% endfor %}
+    {% else %}
+        <h3>Чтобы увидеть список работ, нужно залогиниться</h3>
+    {% endif %}
 {% endblock %}
