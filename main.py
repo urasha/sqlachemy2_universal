@@ -4,7 +4,8 @@ from data.users import User
 from data.jobs import Jobs
 import datetime
 from forms.user import RegisterForm
-from flask_login import LoginManager, login_user, logout_user, login_required
+from forms.new_jobs import JobForm
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from forms.login import LoginForm
 
 
@@ -18,6 +19,26 @@ login_manager.init_app(app)
 def main():
     db_session.global_init('db/blogs.sqlite')
     app.run(port=8080, host='127.0.0.1')
+
+
+@app.route('/jobs',  methods=['GET', 'POST'])
+@login_required
+def add_job():
+    form = JobForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        jobs = Jobs()
+        jobs.job = form.description.data
+        jobs.team_leader = form.team_leader.data
+        jobs.collaborators = form.collaborators.data
+        jobs.work_size = form.work_size.data
+        jobs.is_finished = form.is_finished.data
+        current_user.jobs.append(jobs)
+        db_sess.merge(current_user)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('jobs.html', title='Добавление работы',
+                           form=form)
 
 
 @login_manager.user_loader
