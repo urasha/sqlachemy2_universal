@@ -15,6 +15,17 @@
                 {% else %}
                     Нет
                 {% endif %}
+
+                {% if current_user == item.user %}
+                <div>
+                    <a href="/jobs/{{ item.id }}" class="btn btn-warning">
+                        Изменить
+                    </a>
+                    <a href="/jobs_delete/{{ item.id }}" class="btn btn-danger">
+                        Удалить
+                    </a>
+                </div>
+            {% endif %}
             </div> <br>
         {% endfor %}
         <a href="jobs" class="btn btn-secondary">Добавить работу</a>
